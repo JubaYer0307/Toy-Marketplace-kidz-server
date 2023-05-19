@@ -31,6 +31,13 @@ async function run() {
 
     const toysCollection = client.db('toyDB').collection('toy');
 
+    const toygallery = require('./data/toygallery.json');
+
+
+    app.get('/toygallery', (req, res) => {
+        res.send(toygallery);
+      });
+
     app.post('/addatoy', async(req, res) => {
         const newToy = req.body;
         console.log(newToy);
