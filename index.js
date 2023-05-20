@@ -34,9 +34,31 @@ async function run() {
     const toygallery = require('./data/toygallery.json');
 
 
+
+
+
     app.get('/toygallery', (req, res) => {
         res.send(toygallery);
       });
+
+
+
+      app.post('/addatoy', async (req, res) => {
+        const newToy = req.body;
+  
+        // Retrieve the user's email and name from the request
+        const { sellerEmail, sellerName } = newToy;
+  
+        // Add the user's email and name to the toy object
+        newToy.sellerEmail = sellerEmail;
+        newToy.sellerName = sellerName;
+  
+        const result = await toysCollection.insertOne(newToy);
+        res.json({ insertedId: result.insertedId });
+      });
+
+
+      
 
     app.post('/addatoy', async(req, res) => {
         const newToy = req.body;
@@ -45,21 +67,28 @@ async function run() {
         res.send(result);
     })
 
+
+     
+
     app.get('/addatoy', async(req, res) => {
         const cursor = toysCollection.find();
         const result = await cursor.toArray();
         res.send(result);
     })
 
-    app.get('/addatoy', async (req, res) => {
+    app.get('/mytoys', async (req, res) => {
         console.log(req.query.email);
+        
         let query = {};
+      
         if (req.query?.email) {
-            query = {email: req.query.email}
+          query = { sellerEmail: req.query.email };
         }
-        const result = await bookingCollection.find(query).toArray();
+      
+        const result = await toysCollection.find(query).toArray();
         res.send(result);
-    })
+      });
+      
 
 
 
