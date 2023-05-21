@@ -31,10 +31,10 @@ async function run() {
       res.send(toygallery);
     });
 
-    app.post('/addatoy', async (req, res) => {
-      const newToy = req.body;
-      const result = await toysCollection.insertOne(newToy);
-      res.json({ insertedId: result.insertedId });
+
+    app.get('/addatoy', async (req, res) => {
+      const result = await toysCollection.find().toArray();
+      res.send(result);
     });
 
     app.get('/addatoy/:id', async (req, res) => {
@@ -43,10 +43,13 @@ async function run() {
       res.json(toy);
     });
 
-    app.get('/addatoy', async (req, res) => {
-      const result = await toysCollection.find().toArray();
+    app.get('/addatoy/:id', async(req, res ) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await toysCollection.findOne(query);
       res.send(result);
-    });
+    })
+
 
     app.get('/mytoys', async (req, res) => {
       const { email } = req.query;
@@ -58,6 +61,15 @@ async function run() {
       res.send(result);
     });
 
+    app.post('/addatoy', async (req, res) => {
+      const newToy = req.body;
+      const result = await toysCollection.insertOne(newToy);
+      res.json({ insertedId: result.insertedId });
+    });
+
+    
+    
+
     app.delete('/addatoy/:id' , async(req, res) => {
 
       const id = req.params.id;
@@ -66,12 +78,7 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/addatoy/:id', async(req, res ) => {
-      const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const result = await toysCollection.findOne(query);
-      res.send(result);
-    })
+    
 
     app.put('/addatoy/:id' , async(req, res) => {
       const id = req.params.id;
